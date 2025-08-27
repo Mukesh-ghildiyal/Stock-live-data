@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Professional Financial Dashboard Design System */
+
+@layer base {
+  :root {
+    /* Light Theme Colors */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 146 70% 45%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 45%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 146 70% 45%;
+    --radius: 0.5rem;
+
+    /* Financial specific colors - Light */
+    --profit: 146 70% 40%;
+    --profit-bg: 146 70% 95%;
+    --profit-foreground: 146 70% 20%;
+    --loss: 0 70% 50%;
+    --loss-bg: 0 70% 95%;
+    --loss-foreground: 0 70% 25%;
+    --neutral: 240 3.8% 45%;
+    --warning: 45 93% 50%;
+    --warning-bg: 45 93% 95%;
+    --table-header: 240 4.8% 95.9%;
+    --table-row: 0 0% 98%;
+    --table-row-hover: 240 4.8% 95.9%;
+    --sector-bg: 240 4.8% 97%;
+    --metric-highlight: 200 100% 50%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    --gradient-profit: linear-gradient(135deg, hsl(var(--profit)) 0%, hsl(146 60% 35%) 100%);
+    --gradient-loss: linear-gradient(135deg, hsl(var(--loss)) 0%, hsl(0 60% 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(200 100% 50%) 100%);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --pulse-profit: 0 0 20px hsl(var(--profit) / 0.2);
+    --pulse-loss: 0 0 20px hsl(var(--loss) / 0.2);
+
+    /* Shadows */
+    --shadow-elegant: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-glow: 0 10px 25px -3px hsl(var(--primary) / 0.1);
+  }
+
+  .dark {
+    /* Dark Theme Colors */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 146 70% 50%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 146 70% 50%;
+
+    /* Financial specific colors - Dark */
+    --profit: 146 70% 55%;
+    --profit-bg: 146 70% 8%;
+    --profit-foreground: 146 60% 90%;
+    --loss: 0 70% 60%;
+    --loss-bg: 0 70% 8%;
+    --loss-foreground: 0 60% 90%;
+    --neutral: 240 5% 64.9%;
+    --warning: 45 93% 65%;
+    --warning-bg: 45 93% 8%;
+    --table-header: 240 3.7% 8%;
+    --table-row: 240 10% 5%;
+    --table-row-hover: 240 3.7% 12%;
+    --sector-bg: 240 3.7% 7%;
+    --metric-highlight: 200 100% 65%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(200 100% 60%) 100%);
+    --shadow-glow: 0 10px 25px -3px hsl(var(--primary) / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+
+  /* Financial Dashboard Typography */
+  .financial-heading {
+    @apply text-2xl font-bold tracking-tight;
+  }
+
+  .metric-value {
+    @apply font-mono font-semibold tabular-nums;
+  }
+
+  .profit-text {
+    @apply text-green-400;
+  }
+
+  .loss-text {
+    @apply text-red-400;
+  }
+
+  /* Pulse animations for live updates */
+  .pulse-profit {
+    animation: pulse-profit 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .pulse-loss {
+    animation: pulse-loss 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-profit {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--profit) / 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px hsl(var(--profit) / 0);
+    }
+  }
+
+  @keyframes pulse-loss {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--loss) / 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px hsl(var(--loss) / 0);
+    }
+  }
+
+  /* Enhanced Table styling */
+  .portfolio-table {
+    @apply w-full border-collapse rounded-lg overflow-hidden;
+  }
+
+  .portfolio-table th {
+    @apply bg-table-header text-foreground font-semibold text-sm p-4 text-left border-b border-border backdrop-blur-sm;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .portfolio-table td {
+    @apply p-4 text-sm border-b border-border/50 transition-colors duration-200;
+  }
+
+  .portfolio-table tr:hover {
+    @apply bg-table-row-hover shadow-sm;
+  }
+
+  /* Enhanced typography */
+  .financial-title {
+    @apply text-3xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .section-title {
+    @apply text-xl font-semibold text-foreground/90 mb-4;
+  }
+
+  .metric-label {
+    @apply text-sm font-medium text-muted-foreground uppercase tracking-wide;
+  }
+
+  /* Loading animations */
+  .loading-shimmer {
+    @apply animate-pulse bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 bg-[length:200%_100%];
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Interactive hover utilities */
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  .story-link {
+    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+
+  /* Smooth pulse animation */
+  .pulse {
+    @apply animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite];
+  }
+}
