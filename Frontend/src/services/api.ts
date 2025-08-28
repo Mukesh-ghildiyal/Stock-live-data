@@ -1,6 +1,6 @@
 import { PortfolioStock, PortfolioSummary, SectorSummary } from '@/types/portfolio';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://stockkklivedataaa.onrender.com';
 
 // Request deduplication cache
 const pendingRequests = new Map<string, Promise<any>>();
@@ -53,7 +53,7 @@ const validateStockData = (data: any): boolean => {
 // Enhanced fetch with timeout and retry
 const enhancedFetch = async (url: string, options?: RequestInit): Promise<Response> => {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+  const timeoutId = setTimeout(() => controller.abort(), 60000); // 30 second timeout
   
   try {
     const response = await fetch(url, {

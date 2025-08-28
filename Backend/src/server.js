@@ -67,6 +67,7 @@ const allowedOrigins = [
   getEnv('FRONTEND_ORIGIN', ''),
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://silver-daffodil-08e319.netlify.app/'
 ].filter(Boolean);
 app.use(
   cors({
@@ -279,7 +280,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = parseInt(getEnv('PORT', '3001'), 10);
+const PORT = parseInt(getEnv('PORT', '5000'), 10);
 
 // Graceful shutdown handling
 const server = app.listen(PORT, () => {
