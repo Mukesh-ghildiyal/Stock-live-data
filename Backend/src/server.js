@@ -28,26 +28,26 @@ let pythonProcessCount = 0;
 const logRequest = (req, res, next) => {
   const start = performance.now();
   requestCount++;
-  
+
   // Log request start
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Request #${requestCount}`);
-  
+
   // Override res.end to log response time
   const originalEnd = res.end;
-  res.end = function(...args) {
+  res.end = function (...args) {
     const duration = performance.now() - start;
     const status = res.statusCode;
-    
+
     if (status >= 400) {
       errorCount++;
       console.error(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${status} (${duration.toFixed(2)}ms) - ERROR`);
     } else {
       console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${status} (${duration.toFixed(2)}ms) - SUCCESS`);
     }
-    
+
     originalEnd.apply(this, args);
   };
-  
+
   next();
 };
 
@@ -67,7 +67,7 @@ const allowedOrigins = [
   getEnv('FRONTEND_ORIGIN', ''),
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://silver-daffodil-08e319.netlify.app/'
+  'https://silver-daffodil-08e319.netlify.app'
 ].filter(Boolean);
 app.use(
   cors({
@@ -107,9 +107,9 @@ app.get('/health', (req, res) => {
   const uptime = Date.now() - startTime;
   const uptimeMinutes = Math.floor(uptime / 60000);
   const successRate = requestCount > 0 ? ((requestCount - errorCount) / requestCount) * 100 : 0;
-  
-  res.json({ 
-    status: 'ok', 
+
+  res.json({
+    status: 'ok',
     uptime: uptime,
     uptimeMinutes,
     requestCount,
@@ -126,7 +126,7 @@ app.get('/api/metrics', (req, res) => {
   const uptimeMinutes = Math.floor(uptime / 60000);
   const successRate = requestCount > 0 ? ((requestCount - errorCount) / requestCount) * 100 : 0;
   const requestsPerMinute = (requestCount / uptimeMinutes) || 0;
-  
+
   res.json({
     uptime: {
       total: uptime,
@@ -161,7 +161,7 @@ app.post('/api/scrape', async (req, res) => {
 
     const pythonScript = path.join(__dirname, '..', 'scripts', 'scraper.py');
     const pythonProcess = spawn('python', [pythonScript, JSON.stringify(symbols)]);
-    
+
     pythonProcessCount++;
 
     let data = '';
@@ -178,11 +178,11 @@ app.post('/api/scrape', async (req, res) => {
 
     pythonProcess.on('close', (code) => {
       const duration = performance.now() - startTime;
-      
+
       if (code !== 0) {
         console.error(`Python script error (${duration.toFixed(2)}ms):`, error);
-        return res.status(500).json({ 
-          error: 'Scraping failed', 
+        return res.status(500).json({
+          error: 'Scraping failed',
           details: error,
           duration: Math.round(duration),
           symbols: symbols
@@ -192,9 +192,9 @@ app.post('/api/scrape', async (req, res) => {
       try {
         const scrapedData = JSON.parse(data);
         console.log(`Scraping completed successfully (${duration.toFixed(2)}ms) for ${symbols.length} symbols`);
-        
-        res.json({ 
-          success: true, 
+
+        res.json({
+          success: true,
           data: scrapedData,
           duration: Math.round(duration),
           symbols: symbols,
@@ -202,7 +202,7 @@ app.post('/api/scrape', async (req, res) => {
         });
       } catch (parseError) {
         console.error('Failed to parse Python output:', parseError);
-        res.status(500).json({ 
+        res.status(500).json({
           error: 'Invalid data format from scraper',
           duration: Math.round(duration),
           symbols: symbols
@@ -213,7 +213,7 @@ app.post('/api/scrape', async (req, res) => {
     pythonProcess.on('error', (err) => {
       const duration = performance.now() - startTime;
       console.error(`Failed to start Python process (${duration.toFixed(2)}ms):`, err);
-      res.status(500).json({ 
+      res.status(500).json({
         error: 'Failed to start scraper',
         duration: Math.round(duration),
         symbols: symbols
@@ -225,7 +225,7 @@ app.post('/api/scrape', async (req, res) => {
       pythonProcess.kill('SIGTERM');
       const duration = performance.now() - startTime;
       console.error(`Python process timeout (${duration.toFixed(2)}ms) for ${symbols.length} symbols`);
-      res.status(408).json({ 
+      res.status(408).json({
         error: 'Scraping timeout - process took too long',
         duration: Math.round(duration),
         symbols: symbols
@@ -239,7 +239,7 @@ app.post('/api/scrape', async (req, res) => {
   } catch (err) {
     const duration = performance.now() - startTime;
     console.error(`Scraping endpoint error (${duration.toFixed(2)}ms):`, err);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal server error',
       duration: Math.round(duration)
     });
@@ -251,7 +251,7 @@ app.use('/api/stocks', stocksRouter);
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Not Found',
     path: req.path,
     method: req.method,
@@ -263,15 +263,15 @@ app.use((req, res) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   errorCount++;
-  
+
   // Avoid leaking internals in production
   const isProd = getEnv('NODE_ENV', 'development') === 'production';
   const message = isProd ? 'Internal Server Error' : err.message;
   const status = err.status || 500;
-  
+
   console.error(`Error ${status} for ${req.method} ${req.path}:`, err);
-  
-  res.status(status).json({ 
+
+  res.status(status).json({
     error: message,
     status: status,
     timestamp: new Date().toISOString(),
